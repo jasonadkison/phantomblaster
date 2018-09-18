@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require 'commander'
+require 'terminal-table'
+require 'phantomblaster'
+require 'phantomblaster/cli'
+
+Phantomblaster.configure do |config|
+  config.api_key = ENV['PHANTOMBUSTER_API_KEY']
+end
+
+cli = Phantomblaster::CLI.new
+cli.run
