@@ -1,8 +1,8 @@
 # Phantomblaster
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/phantomblaster`. To experiment with that code, run `bin/console` for an interactive prompt.
+A ruby gem for interacting with the [Phantombuster](https://phantombuster.com) service.
 
-TODO: Delete this and the text above, and describe your gem
+Currently includes a CLI tool to make it easier to develop and work with agent scripts. In the future, it will provide an easy way to interact with agents from within any ruby program.
 
 ## Installation
 
@@ -22,7 +22,37 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+  phantomblaster account            # Displays information about the account
+  phantomblaster agents             # Lists all remote agents
+  phantomblaster download FILENAME  # Downloads an agent script
+  phantomblaster generate FILENAME  # Generates an agent script
+  phantomblaster help [COMMAND]     # Describe available commands or one specific command
+  phantomblaster pull               # Fetches all agent scripts
+  phantomblaster push               # Pushes all agent scripts
+  phantomblaster scripts            # Lists all remote scripts
+  phantomblaster upload FILENAME    # Uploads an agent script
+```
+
+## Configuration
+
+There are currently 2 options available.
+
+You can configure options by creating an initializer:
+
+```ruby
+Phantomblaster.configure do |config|
+  config.api_key = 'XXXXXXXXX'
+  config.scripts_dir = '/path/to/scripts'
+end
+```
+
+Or set the following environment variables:
+
+* PHANTOMBUSTER_API_KEY
+* PHANTOMBUSTER_SCRIPTS_DIR
+
+The scripts directory must be an absolute path.
 
 ## Development
 
@@ -32,7 +62,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/phantomblaster.
+Bug reports and pull requests are welcome on GitHub at https://github.com/jasonadkison/phantomblaster.
 
 ## License
 
