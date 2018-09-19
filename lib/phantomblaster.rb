@@ -1,4 +1,5 @@
 require 'phantomblaster/version'
+require 'phantomblaster/configuration'
 require 'phantomblaster/errors'
 require 'phantomblaster/client'
 require 'phantomblaster/models/user'
@@ -13,17 +14,6 @@ module Phantomblaster
   def self.configure
     self.configuration ||= Configuration.new
     yield(configuration)
-  end
-
-  # Class that holds the config state for the gem.
-  # Define each config option with a getter/setter.
-  class Configuration
-    attr_accessor :api_key, :scripts_dir
-
-    def initialize
-      @api_key = ''
-      @scripts_dir = ''
-    end
   end
 end
 
