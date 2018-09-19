@@ -34,6 +34,7 @@ module PhantomblasterHelpers
     url = "#{Phantomblaster::API_URL}/script/#{name}"
     query = { insertOnly: false, source: :phantomblaster }
     response_body = options.fetch(:response_body, json_string('script_post.json'))
-    stub_request(:post, url).with(query: query, body: text).to_return(status: status, body: response_body)
+    stub_request(:post, url).with(query: query, body: text)
+                            .to_return(status: status, body: response_body)
   end
 end

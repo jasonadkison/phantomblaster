@@ -125,5 +125,4 @@ RSpec.describe Phantomblaster::Models::Script do
       end
     end
   end
-
 end
