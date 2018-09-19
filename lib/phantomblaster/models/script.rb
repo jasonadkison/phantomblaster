@@ -31,7 +31,7 @@ module Phantomblaster
         @name = params['name']
         @source = params['source']
         @last_saved_at = params['lastSaveDate']
-        @text = params['text'].to_s
+        @text = params['text'] unless params['text'].nil?
       end
 
       def text
