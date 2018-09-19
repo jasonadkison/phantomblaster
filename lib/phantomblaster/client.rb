@@ -3,16 +3,24 @@ require 'net/http'
 require 'json'
 
 module Phantomblaster
+  # This class is responsible for constructing and performing HTTP requests.
   class Client
+    # Perform a GET request.
+    # @param path [String] The endpoint path
+    # @param args [Hash] The query params
     def self.get(path, args = {})
       client = new(path, args)
-      response = client.request { |uri| Net::HTTP::Get.new(uri) }
+      response = client.send(:request) { |uri| Net::HTTP::Get.new(uri) }
       response['data']
     end
 
+    # Perform a POST request.
+    # @param path [String] The endpoint path
+    # @param body [String] The request body
+    # @param args [Hash] The query params
     def self.post(path, body, args = {})
       client = new(path, args)
-      response = client.request do |uri|
+      response = client.send(:request) do |uri|
         req = Net::HTTP::Post.new(uri)
         req.body = body
         req
@@ -20,13 +28,35 @@ module Phantomblaster
       response
     end
 
-    attr_reader :path, :args
+    # @return [String] the current endpoint path, e.g. /user
+    attr_reader :path
 
+    # @return [Hash] the current query params
+    attr_reader :args
+
+    # Creates a client instance.
+    # @param path [String] The API endpoint path, e.g. /user
+    # @param args [Hash] The query params
     def initialize(path, args = {})
       @path = path
       @args = args
     end
 
+    # Constructs and performs the request.
+    #
+    # @yieldparam uri [URI] The constructed URI object
+    # @yieldreturn [Net::HTTP::Get, Net::HTTP::Post] The request object
+    # @return [Hash] The JSON parsed response body
+    #
+    # @example perform a GET
+    #   client.request { |uri| Net::HTTP::Get.new(uri) }
+    #
+    # @example perform a POST
+    #   client.request do |uri|
+    #     req = Net::HTTP::Post.new(uri)
+    #     req.body = 'the body'
+    #     res
+    #   end
     def request(&_block)
       uri = build_uri
       req = yield uri
@@ -42,14 +72,16 @@ module Phantomblaster
 
     private
 
+    # Returns a new query object with the supplied args and api key merged in.
     def build_query(uri, args = {})
       new_query = URI.decode_www_form(uri.query || '')
       args.to_a.each { |arg| new_query << arg }
       key = Phantomblaster.configuration.api_key
       new_query << ['key', key] if key && ENV['GEM_ENV'] != 'test'
-      uri.query = URI.encode_www_form(new_query)
+      URI.encode_www_form(new_query)
     end
 
+    # Constructs and returns the URI object with the full endpoint URL and query string.
     def build_uri
       uri = URI("#{Phantomblaster::API_URL}#{path}")
       query = build_query(uri, args)
@@ -57,6 +89,7 @@ module Phantomblaster
       uri
     end
 
+    # Constructs the configured Net::HTTP object.
     def build_http(uri)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
