@@ -2,7 +2,7 @@ module Phantomblaster
   module Models
     class User
       def self.find
-        data = Phantomblaster::Client.get('/user')
+        data = Phantomblaster::API.get_user
         new(data)
       end
 

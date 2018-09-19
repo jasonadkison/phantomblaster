@@ -1,4 +1,10 @@
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
 Metrics/LineLength:
   Max: 100
+Naming/AccessorMethodName:
+  Exclude:
+    - lib/phantomblaster/api.rb
 Style/Documentation:
   Enabled: false

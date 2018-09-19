@@ -2,17 +2,17 @@ module Phantomblaster
   module Models
     class Script
       def self.find(id)
-        data = Phantomblaster::Client.get("/script/by-id/json/#{id}", withoutText: false)
+        data = Phantomblaster::API.get_script(id: id)
         new(data)
       end
 
       def self.find_by_name(name)
-        data = Phantomblaster::Client.get("/script/by-name/json/#{name}", withoutText: false)
+        data = Phantomblaster::API.get_script(name: name)
         new(data)
       end
 
       def self.all
-        data = Phantomblaster::Client.get('/scripts')
+        data = Phantomblaster::API.get_scripts
         data.map { |params| new(params) }
       end
 
@@ -21,9 +21,7 @@ module Phantomblaster
         raise MissingFileError, "#{pathname.realdirpath} not found" unless pathname.file?
 
         text = pathname.open(&:read)
-        Phantomblaster::Client.post("/script/#{name}", text: text,
-                                                       insertOnly: false,
-                                                       source: :phantomblaster)
+        Phantomblaster::API.post_script(name, text)
       end
 
       attr_reader :id, :name, :source, :last_saved_at

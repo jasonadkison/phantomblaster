@@ -4,6 +4,7 @@ require 'webmock/rspec'
 require 'support/json_fixtures'
 require 'support/phantomblaster_helpers'
 
+ENV['GEM_ENV'] = 'test'
 WebMock.disable_net_connect!
 
 RSpec.configure do |config|
