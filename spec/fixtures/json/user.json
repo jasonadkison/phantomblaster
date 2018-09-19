@@ -1,0 +1,11 @@
+{
+  "data": {
+    "email": "test@test.com",
+    "agents": [{
+      "name": "Agent 1",
+      "id": "1",
+      "scriptId": "101",
+      "lastEndStatus": "1537313102"
+    }]
+  }
+}

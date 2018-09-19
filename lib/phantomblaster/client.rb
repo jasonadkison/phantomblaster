@@ -10,7 +10,8 @@ module Phantomblaster
       uri = URI("#{API_URL}#{path}")
       new_query = URI.decode_www_form(uri.query || '')
       args.to_a.each { |arg| new_query << arg }
-      new_query << ['key', Phantomblaster.configuration.api_key]
+      key = Phantomblaster.configuration.api_key
+      new_query << ['key', key] if key
       uri.query = URI.encode_www_form(new_query)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
