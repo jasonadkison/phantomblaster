@@ -3,6 +3,4 @@
 require 'phantomblaster'
 require 'phantomblaster/cli'
 
-raise 'api key is not set' if Phantomblaster.configuration.api_key.nil?
-
 Phantomblaster::CLI.start
