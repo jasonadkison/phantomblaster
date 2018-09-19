@@ -4,7 +4,7 @@ A ruby gem for interacting with the [Phantombuster](https://phantombuster.com) s
 
 Currently includes a CLI tool to make it easier to develop and work with agent scripts. In the future, it will provide an easy way to interact with agents from within any ruby program.
 
-[![Gem Version](https://badge.fury.io/rb/phantomblaster.svg)](https://badge.fury.io/rb/phantomblaster)
+[![Gem Version](https://badge.fury.io/rb/phantomblaster.svg)](https://badge.fury.io/rb/phantomblaster) [![CircleCI](https://circleci.com/gh/jasonadkison/phantomblaster/tree/master.svg?style=svg)](https://circleci.com/gh/jasonadkison/phantomblaster/tree/master)
 
 ## Installation
 
