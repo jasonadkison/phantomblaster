@@ -64,12 +64,12 @@ module Phantomblaster
       req = yield uri
       http = build_http(uri)
       res = http.request(req)
-      raise APIError, "Unexpected response: #{res}" unless res.is_a?(Net::HTTPSuccess)
+      raise APIError, "Invalid response from API: #{res.inspect}" unless res.is_a?(Net::HTTPSuccess)
 
       res_body = res.read_body
       JSON.parse(res_body)
     rescue JSON::ParserError => _e
-      raise APIError, "Could not parse response body: #{res_body}"
+      raise APIError, "Invalid response object from API: #{res_body.inspect}"
     end
 
     private
