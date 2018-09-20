@@ -1,9 +1,11 @@
 module Phantomblaster
   module Models
     class User
-      def self.find
-        data = Phantomblaster::API.get_user
-        new(data)
+      class << self
+        def find
+          data = Phantomblaster::API.get_user
+          new(data)
+        end
       end
 
       attr_reader :email, :agents

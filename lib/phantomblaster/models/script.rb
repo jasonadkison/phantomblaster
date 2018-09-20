@@ -1,27 +1,29 @@
 module Phantomblaster
   module Models
     class Script
-      def self.find(id)
-        data = Phantomblaster::API.get_script(id: id)
-        new(data)
-      end
+      class << self
+        def find(id)
+          data = Phantomblaster::API.get_script(id: id)
+          new(data)
+        end
 
-      def self.find_by_name(name)
-        data = Phantomblaster::API.get_script(name: name)
-        new(data)
-      end
+        def find_by_name(name)
+          data = Phantomblaster::API.get_script(name: name)
+          new(data)
+        end
 
-      def self.all
-        data = Phantomblaster::API.get_scripts
-        data.map { |params| new(params) }
-      end
+        def all
+          data = Phantomblaster::API.get_scripts
+          data.map { |params| new(params) }
+        end
 
-      def self.upload(name)
-        pathname = Pathname.new("#{Phantomblaster.configuration.scripts_dir}/#{name}")
-        raise MissingFileError, "#{pathname.realdirpath} not found" unless pathname.file?
+        def upload(name)
+          pathname = Pathname.new("#{Phantomblaster.configuration.scripts_dir}/#{name}")
+          raise MissingFileError, "#{pathname.realdirpath} not found" unless pathname.file?
 
-        text = pathname.open(&:read)
-        Phantomblaster::API.post_script(name, text)
+          text = pathname.open(&:read)
+          Phantomblaster::API.post_script(name, text)
+        end
       end
 
       attr_reader :id, :name, :source, :last_saved_at

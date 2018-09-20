@@ -5,27 +5,29 @@ require 'json'
 module Phantomblaster
   # This class is responsible for constructing and performing HTTP requests.
   class Client
-    # Perform a GET request.
-    # @param path [String] The endpoint path
-    # @param args [Hash] The query params
-    def self.get(path, args = {})
-      client = new(path, args)
-      response = client.send(:request) { |uri| Net::HTTP::Get.new(uri) }
-      response['data']
-    end
-
-    # Perform a POST request.
-    # @param path [String] The endpoint path
-    # @param body [String] The request body
-    # @param args [Hash] The query params
-    def self.post(path, body, args = {})
-      client = new(path, args)
-      response = client.send(:request) do |uri|
-        req = Net::HTTP::Post.new(uri)
-        req.body = body
-        req
+    class << self
+      # Perform a GET request.
+      # @param path [String] The endpoint path
+      # @param args [Hash] The query params
+      def get(path, args = {})
+        client = new(path, args)
+        response = client.send(:request) { |uri| Net::HTTP::Get.new(uri) }
+        response['data']
       end
-      response
+
+      # Perform a POST request.
+      # @param path [String] The endpoint path
+      # @param body [String] The request body
+      # @param args [Hash] The query params
+      def post(path, body, args = {})
+        client = new(path, args)
+        response = client.send(:request) do |uri|
+          req = Net::HTTP::Post.new(uri)
+          req.body = body
+          req
+        end
+        response
+      end
     end
 
     # @return [String] the current endpoint path, e.g. /user
