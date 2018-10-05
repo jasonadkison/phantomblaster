@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop', '~> 0.59.1'
   spec.add_development_dependency 'webmock', '~> 3.4.2'
 
+  spec.add_runtime_dependency 'diffy', '~> 3.1.0'
   spec.add_runtime_dependency 'terminal-table', '~> 1.8.0'
   spec.add_runtime_dependency 'thor', '~> 0.20.0'
 end

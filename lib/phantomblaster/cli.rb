@@ -1,6 +1,7 @@
 require 'thor'
 require 'terminal-table'
 require 'pathname'
+require 'diffy'
 require 'phantomblaster/generators/script'
 
 module Phantomblaster
@@ -47,7 +48,19 @@ module Phantomblaster
 
     desc 'upload FILENAME', 'Uploads an agent script'
     def upload(name)
-      return unless yes?("Upload #{name} to Phantombuster?")
+      begin
+        @script = Phantomblaster::Models::Script.find_by_name(name)
+        diff = Diffy::Diff.new(@script.text, @script.local_text)
+        return say 'Local and remote scripts are identical.' if diff.to_s.empty?
+
+        say diff.to_s(:color)
+      rescue APIError => e
+        raise e unless e.message.include?('404')
+
+        say "Creating #{name} on Phantombuster."
+      end
+
+      return unless yes?('Continue?')
 
       res = Phantomblaster::Models::Script.upload(name)
       say res
@@ -76,8 +89,10 @@ module Phantomblaster
 
     desc 'pull', 'Fetches all agent scripts'
     def pull
-      return unless yes?("This will pull from Phantombuster and overwrite any existing scripts. " \
-                         "Are you sure you want to continue?")
+      say 'This will pull all remote Phantombuster scripts.'
+      say 'Existing scripts on your local file system will be overwritten!', :bold
+
+      return unless yes?('Are you sure you want to continue?')
 
       current_scripts.each do |script|
         download(script.name, true)
@@ -86,8 +101,10 @@ module Phantomblaster
 
     desc 'push', 'Pushes all agent scripts'
     def push
-      return unless yes?("This will push all local scripts to Phantombuster and overwrite any " \
-                         "existing scripts. Are you sure you want to continue?")
+      say 'This will push all local file system scripts to Phantombuster.'
+      say 'Existing scripts on Phantombuster will be overwritten!', :bold
+
+      return unless yes?('Are you sure you want to continue?')
 
       folder_pathname = Pathname.new(Phantomblaster.configuration.scripts_dir)
       raise 'Scripts directory does not exist' unless folder_pathname.directory?
