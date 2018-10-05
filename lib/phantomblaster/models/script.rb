@@ -17,11 +17,15 @@ module Phantomblaster
           data.map { |params| new(params) }
         end
 
-        def upload(name)
+        def read_local(name)
           pathname = Pathname.new("#{Phantomblaster.configuration.scripts_dir}/#{name}")
           raise MissingFileError, "#{pathname.realdirpath} not found" unless pathname.file?
 
-          text = pathname.open(&:read)
+          pathname.open(&:read)
+        end
+
+        def upload(name)
+          text = read_local(name)
           Phantomblaster::API.post_script(name, text)
         end
       end
@@ -33,11 +37,15 @@ module Phantomblaster
         @name = params['name']
         @source = params['source']
         @last_saved_at = params['lastSaveDate']
-        @text = params['text'] unless params['text'].nil?
+        @text = params['text'].to_s if params.key?('text')
       end
 
       def text
         @text ||= self.class.find(id).instance_variable_get(:@text)
+      end
+
+      def local_text
+        @local_text ||= self.class.read_local(name)
       end
     end
   end
