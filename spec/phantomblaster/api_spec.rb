@@ -52,7 +52,7 @@ RSpec.describe Phantomblaster::API do
     it 'should POST /script/:name' do
       stub_script_post_request(name: name, text: text)
       described_class.post_script(name, text)
-      expect(a_request(:post, url).with(body: text, query: query)).to have_been_made
+      expect(a_request(:post, url).with(body: { text: text }, query: query)).to have_been_made
     end
   end
 end

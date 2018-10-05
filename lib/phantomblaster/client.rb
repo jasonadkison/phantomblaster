@@ -23,7 +23,8 @@ module Phantomblaster
         client = new(path, args)
         response = client.send(:request) do |uri|
           req = Net::HTTP::Post.new(uri)
-          req.set_form_data(text: body)
+          req.body = body if body.is_a?(String)
+          req.set_form_data(body) if body.is_a?(Hash)
           req
         end
         response

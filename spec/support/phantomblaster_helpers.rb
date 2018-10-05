@@ -30,11 +30,12 @@ module PhantomblasterHelpers
   def stub_script_post_request(options = {})
     name = options.fetch(:name, 'file.js')
     text = options.fetch(:text, '/* stub */')
+    body = { text: text }
     status = options.fetch(:status, 200)
     url = "#{Phantomblaster::API_URL}/script/#{name}"
     query = { insertOnly: false, source: :phantomblaster }
     response_body = options.fetch(:response_body, json_string('script_post.json'))
-    stub_request(:post, url).with(query: query, body: text)
+    stub_request(:post, url).with(query: query, body: body)
                             .to_return(status: status, body: response_body)
   end
 end

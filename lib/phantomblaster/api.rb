@@ -15,7 +15,8 @@ module Phantomblaster
 
     def self.post_script(name, text)
       url = "/script/#{name}"
-      Phantomblaster::Client.post(url, text, insertOnly: false, source: :phantomblaster)
+      body = { text: text }
+      Phantomblaster::Client.post(url, body, insertOnly: false, source: :phantomblaster)
     end
   end
 end
