@@ -1,29 +1,29 @@
 module Phantomblaster
   module Models
     class Script
-      def self.find(id)
-        data = Phantomblaster::Client.get("/script/by-id/json/#{id}", withoutText: false)
-        new(data)
-      end
+      class << self
+        def find(id)
+          data = Phantomblaster::API.get_script(id: id)
+          new(data)
+        end
 
-      def self.find_by_name(name)
-        data = Phantomblaster::Client.get("/script/by-name/json/#{name}", withoutText: false)
-        new(data)
-      end
+        def find_by_name(name)
+          data = Phantomblaster::API.get_script(name: name)
+          new(data)
+        end
 
-      def self.all
-        data = Phantomblaster::Client.get('/scripts')
-        data.map { |params| new(params) }
-      end
+        def all
+          data = Phantomblaster::API.get_scripts
+          data.map { |params| new(params) }
+        end
 
-      def self.upload(name)
-        pathname = Pathname.new("#{Phantomblaster.configuration.scripts_dir}/#{name}")
-        raise MissingFileError, "#{pathname.realdirpath} not found" unless pathname.file?
+        def upload(name)
+          pathname = Pathname.new("#{Phantomblaster.configuration.scripts_dir}/#{name}")
+          raise MissingFileError, "#{pathname.realdirpath} not found" unless pathname.file?
 
-        text = pathname.open(&:read)
-        Phantomblaster::Client.post("/script/#{name}", text: text,
-                                                       insertOnly: false,
-                                                       source: :phantomblaster)
+          text = pathname.open(&:read)
+          Phantomblaster::API.post_script(name, text)
+        end
       end
 
       attr_reader :id, :name, :source, :last_saved_at
@@ -33,7 +33,7 @@ module Phantomblaster
         @name = params['name']
         @source = params['source']
         @last_saved_at = params['lastSaveDate']
-        @text = params['text'].to_s
+        @text = params['text'] unless params['text'].nil?
       end
 
       def text
